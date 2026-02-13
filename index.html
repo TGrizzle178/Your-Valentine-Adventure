@@ -115,15 +115,15 @@
     const storyData = {
         start: {
             icon: "🎁",
-            text: "A mysterious package arrived for you. It's addressed from 'Your Favorite Person'. Do you open it?",
+            text: "A mysterious package arrived for you. It's addressed from Bubby. Care to open it?",
             choices: [
                 { text: "Open it!", next: "intro" },
-                { text: "Shake it first", next: "shake" }
+                { text: "Shake it a lil first", next: "shake" }
             ]
         },
         shake: {
             icon: "📦",
-            text: "It sounds like... memories? And maybe some chocolate. Better open it now!",
+            text: "It smells like toots... and maybe some chocolate. Very scary, but you should open it now!",
             choices: [
                 { text: "Okay, open it!", next: "intro" }
             ]
@@ -132,13 +132,13 @@
             icon: "✨",
             text: "Inside is a map of our best moments. To reach the end, you have to choose our next adventure. Where are we going?",
             choices: [
-                { text: "A cozy picnic", next: "picnic" },
-                { text: "A fancy dinner", next: "dinner" }
+                { text: "A cold picnic", next: "picnic" },
+                { text: "A nice dinner", next: "dinner" }
             ]
         },
         picnic: {
             icon: "🧺",
-            text: "The sun is setting, and I've packed all your favorite snacks. I have one very important question to ask...",
+            text: "The sun is setting, and I've packed all our favorite snacks. I have one very important question to ask...",
             choices: [
                 { text: "Ask away!", next: "proposal" }
             ]
@@ -160,36 +160,52 @@
         },
         win: {
             icon: "🎉",
-            text: "HOORAY! I can't wait to celebrate with you. Check your messages for the secret coordinates to our date!",
+            text: "Yippeeee! I can't wait to celebrate with you. I shall pick you up at 6PM for our Italian experience tonight at the fine Ragazzi Restaurant",
+            bg: ragazzi.jpg,
             choices: []
         }
     };
 
     function renderScene(sceneKey) {
-        const scene = storyData[sceneKey];
-        const textElement = document.getElementById('story-text');
-        const iconElement = document.getElementById('main-icon');
-        const buttonContainer = document.getElementById('choice-buttons');
+    const scene = storyData[sceneKey];
+    const textElement = document.getElementById('story-text');
+    const iconElement = document.getElementById('main-icon');
+    const buttonContainer = document.getElementById('choice-buttons');
+    const container = document.getElementById('game-container');
 
-        textElement.innerText = scene.text;
-        iconElement.innerText = scene.icon;
-        buttonContainer.innerHTML = '';
+    // Reset background to white for every scene unless specified
+    container.style.backgroundImage = 'none';
+    container.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
 
-        scene.choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.innerText = choice.text;
-
-            if (choice.isNo) {
-                btn.id = "no-button";
-                // Moves on hover (PC) or touch (Mobile)
-                btn.onmouseover = moveButton;
-                btn.ontouchstart = moveButton;
-            } else {
-                btn.onclick = () => renderScene(choice.next);
-            }
-            buttonContainer.appendChild(btn);
-        });
+    // If the scene has a background image, apply it
+    if (scene.bg) {
+        container.style.backgroundImage = `url('${scene.bg}')`;
+        container.style.backgroundSize = 'cover';
+        container.style.backgroundPosition = 'center';
+        // Make text easier to read over a photo
+        textElement.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        textElement.style.padding = '10px';
+        textElement.style.borderRadius = '10px';
     }
+
+    textElement.innerText = scene.text;
+    iconElement.innerText = scene.icon;
+    buttonContainer.innerHTML = '';
+
+    scene.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.innerText = choice.text;
+
+        if (choice.isNo) {
+            btn.id = "no-button";
+            btn.onmouseover = moveButton;
+            btn.ontouchstart = moveButton;
+        } else {
+            btn.onclick = () => renderScene(choice.next);
+        }
+        buttonContainer.appendChild(btn);
+    });
+}
 
     function moveButton() {
         const btn = document.getElementById('no-button');
